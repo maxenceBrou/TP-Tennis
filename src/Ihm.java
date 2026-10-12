@@ -11,7 +11,7 @@ public class Ihm {
         String sClassement = "";
         int victoiresMax = 0;
         int victoires = 0;
-        boolean bonus = 0;
+        boolean bonus = false;
         int points = 0;
         int nmbrDefaites = 0;
         int defaitesEgale = 0;
