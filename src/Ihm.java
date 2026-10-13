@@ -11,7 +11,6 @@ public class Ihm {
         String sClassement = "";
         int victoiresMax = 0;
         int victoires = 0;
-        boolean bonus = false;
         int points = 0;
         int nmbrDefaites = 0;
         int defaitesEgale = 0;
@@ -104,9 +103,10 @@ public class Ihm {
         System.out.println("Saisir votre nombre de défaites");
         nmbrDefaites = In.readInteger();
 
+        //début if défaites
         if ((victoires > 5) && (nmbrDefaites > 0)){
             for (int i = 1; i <= nmbrDefaites; i++) {
-                System.out.println("Saisir le classement de votre adversaires :" +
+                System.out.println("Saisir le classement de votre adversaires pour la défaite " + i +
                         "\nNon classé : 1" +
                         "\n40 : 2" +
                         "\n30/5 : 3" +
@@ -132,12 +132,32 @@ public class Ihm {
                 }
             }
         }
+        // fin If défaites
+
+        // Traitement nombre de victoires supplémentaires
         formule = victoires - defaitesEgale - (2 * defaites1EchInf) - (5 * defaites2EchInf);
+        if (victoires > victoiresMax) {
+            if (formule >= 25 && ((victoires - victoiresMax) >= 6)) {
+                victoires = (victoiresMax + 6);
+            } else if (formule >= 20 && ((victoires - victoiresMax) >= 5)) {
+                victoires = (victoiresMax + 5);
+            } else if (formule >= 15 && ((victoires - victoiresMax) >= 4)) {
+                victoires = (victoiresMax + 4);
+            } else if (formule >= 10 && ((victoires - victoiresMax) >= 3)) {
+                victoires = (victoiresMax + 3);
+            } else if (formule >= 5 && ((victoires - victoiresMax) >= 2)) {
+                victoires = (victoiresMax + 2);
+            } else if (formule >= 0 && ((victoires - victoiresMax) >= 1)) {
+                victoires = (victoiresMax + 1);
+            } else {
+                victoires = victoiresMax;
+            }
+        }
         System.out.println("Vous avez donc " + victoires + " victoires");
 
         // Saisie des victoires
         for (int i = 1; i <= victoires; i++) {
-            System.out.println("Saisir le classement de votre adversaires :" +
+            System.out.println("Saisir le classement de votre adversaires  pour la victoire " + i +
                     "\nNon classé : 1" +
                     "\n40 : 2" +
                     "\n30/5 : 3" +
@@ -175,7 +195,7 @@ public class Ihm {
                 System.out.println("Votre adversaire est au moins 4 echelons plus bas, vous avez gagné 0 points");
             }
         }
-        System.out.println("Vos victoires vous ont récompensé : " + points + " points.\nNous allons recalculer votre classement.");
+        System.out.println("Vos matchs vous ont récompensé de " + points + " points.\nNous allons recalculer votre classement.");
         switch (iClassement) {
             case 1:
                 if (points >= 50) {
