@@ -1,24 +1,18 @@
 import clavier.In;
 
-import java.util.Scanner;
-
 public class Ihm {
     public static void main(String[] args) {
         // Initialisation variables, changement du "_" par un "c" au souhait de Monsieur Foray car meilleur pratique
         final int NC = 1, c40 = 2, c30_5 = 3, c30_4 = 4, c30_3 = 5, c30_2 = 6,
                 c30_1 = 7, c30 = 8, c15_5 = 9, c15_4 = 10;
 
-        String sClassement = "";
+        String sClassement;
         int victoiresMax = 0;
-        int victoires = 0;
-        int points = 0;
-        int nmbrDefaites = 0;
+        int victoires, diffVictoires, points, nmbrDefaites, classementAdversaire, formule;
         int defaitesEgale = 0;
         int defaites1EchInf = 0;
         int defaites2EchInf = 0;
-        int classementAdversaire = 0;
 
-        int formule = 0;
 
 
         // Saisie classement de depart
@@ -136,18 +130,19 @@ public class Ihm {
 
         // Traitement nombre de victoires supplémentaires
         formule = victoires - defaitesEgale - (2 * defaites1EchInf) - (5 * defaites2EchInf);
-        if (victoires > victoiresMax) {
-            if (formule >= 25 && ((victoires - victoiresMax) >= 6)) {
+        diffVictoires = victoires - victoiresMax;
+        if (diffVictoires > 0) {
+            if (formule >= 25 && ((diffVictoires) >= 6)) {
                 victoires = (victoiresMax + 6);
-            } else if (formule >= 20 && ((victoires - victoiresMax) >= 5)) {
+            } else if (formule >= 20 && ((diffVictoires) >= 5)) {
                 victoires = (victoiresMax + 5);
-            } else if (formule >= 15 && ((victoires - victoiresMax) >= 4)) {
+            } else if (formule >= 15 && ((diffVictoires) >= 4)) {
                 victoires = (victoiresMax + 4);
-            } else if (formule >= 10 && ((victoires - victoiresMax) >= 3)) {
+            } else if (formule >= 10 && ((diffVictoires) >= 3)) {
                 victoires = (victoiresMax + 3);
-            } else if (formule >= 5 && ((victoires - victoiresMax) >= 2)) {
+            } else if (formule >= 5 && ((diffVictoires) >= 2)) {
                 victoires = (victoiresMax + 2);
-            } else if (formule >= 0 && ((victoires - victoiresMax) >= 1)) {
+            } else if (formule >= 0) {
                 victoires = (victoiresMax + 1);
             } else {
                 victoires = victoiresMax;
@@ -171,13 +166,13 @@ public class Ihm {
             classementAdversaire = In.readInteger();
             int differenceClassement = (iClassement - classementAdversaire);
 
-            // Switch Calcul de points
+            // If Calcul de points
             if (differenceClassement <= -2 && differenceClassement >= -9) {
                 points += 150;
                 System.out.println("Votre adversaire est 2 echelons plus haut, vous avez gagné 150 points");
             } else if (differenceClassement == -1) {
                 points += 100;
-                System.out.println("Votre adversaire est 1 echelons plus haut, vous avez gagné 150 points");
+                System.out.println("Votre adversaire est 1 echelons plus haut, vous avez gagné 100 points");
             } else if (differenceClassement == 0) {
                 points += 50;
                 System.out.println("Votre adversaire est du même echelon, vous avez gagné 50 points");
@@ -190,8 +185,7 @@ public class Ihm {
             } else if (differenceClassement == 3) {
                 points += 15;
                 System.out.println("Votre adversaire est 3 echelons plus bas, vous avez gagné 15 points");
-            } else if (differenceClassement <= 4 && differenceClassement >= 9) {
-                points += 0;
+            } else if (differenceClassement <= 4) {
                 System.out.println("Votre adversaire est au moins 4 echelons plus bas, vous avez gagné 0 points");
             }
         }
