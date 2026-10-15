@@ -1,10 +1,10 @@
 import clavier.In;
 
 public class Ihm {
+    static final int NC = 1, C40 = 2, C30_5 = 3, C30_4 = 4, C30_3 = 5, C30_2 = 6,
+            C30_1 = 7, C30 = 8, C15_5 = 9, C15_4 = 10;
     public static void main(String[] args) {
-        // Initialisation variables, changement du "_" par un "c" au souhait de Monsieur Foray car meilleur pratique
-        final int NC = 1, c40 = 2, c30_5 = 3, c30_4 = 4, c30_3 = 5, c30_2 = 6,
-                c30_1 = 7, c30 = 8, c15_5 = 9, c15_4 = 10;
+        // Initialisation variables
 
         String sClassement;
         int victoiresMax = 0;
@@ -12,7 +12,6 @@ public class Ihm {
         int defaitesEgale = 0;
         int defaites1EchInf = 0;
         int defaites2EchInf = 0;
-
 
 
         // Saisie classement de depart
@@ -29,78 +28,86 @@ public class Ihm {
                 "\n15/4 : 10");
         int iClassement = In.readInteger();
 
-        switch (iClassement) {
-            case NC:
-                sClassement = "Non Classé";
-                points = 0;
-                victoiresMax = 5;
-                break;
-            case c40:
-                sClassement = "40";
-                points = 2;
-                victoiresMax = 5;
-                break;
-            case c30_5:
-                sClassement = "30/5";
-                points = 5;
-                break;
-            case c30_4:
-                sClassement = "30/4";
-                points = 10;
-                victoiresMax = 5;
-                break;
-            case c30_3:
-                sClassement = "30/3";
-                points = 20;
-                victoiresMax = 6;
-                break;
-            case c30_2:
-                sClassement = "30/2";
-                points = 30;
-                victoiresMax = 6;
-                break;
-            case c30_1:
-                sClassement = "30/1";
-                points = 50;
-                victoiresMax = 6;
-                break;
-            case c30:
-                sClassement = "30";
-                points = 80;
-                victoiresMax = 6;
-                break;
-            case c15_5:
-                sClassement = "15/5";
-                points = 120;
-                victoiresMax = 6;
-                break;
-            case c15_4:
-                sClassement = "15/4";
-                points = 160;
-                victoiresMax = 6;
-                break;
-            default:
-                sClassement = "Non Classé";
-                points = 0;
-                victoiresMax = 5;
-                System.out.println("Mauvaise valeur entree, vous serez donc : " + sClassement);
-                break;
-        }
-        System.out.println("Votre classement : " + sClassement + ". Vous avez " + points
-                + " points, ainsi que " + victoiresMax + " victoires maximum.");
-
         // Saisie nombre de victoires
         System.out.print("Saisir votre nombre de victoires : ");
         victoires = In.readInteger();
-
-
+       // if(victoires < victoiresMax) {
         System.out.println("Saisir votre nombre de défaites");
         nmbrDefaites = In.readInteger();
 
-        //début if défaites
-        if ((victoires > 5) && (nmbrDefaites > 0)){
-            for (int i = 1; i <= nmbrDefaites; i++) {
-                System.out.println("Saisir le classement de votre adversaires pour la défaite " + i +
+        do {
+            sClassement = sClassement(iClassement);
+
+            points = iPoints(iClassement);
+            victoiresMax = iVictoiresMax(iClassement);
+            System.out.println("Votre classement : " + sClassement + ". Vous avez " + points
+                    + " points, ainsi que " + victoiresMax + " victoires maximum.");
+
+
+            //début if défaites
+            if ((victoires > 5) && (nmbrDefaites > 0)) {
+                for (int i = 1; i <= nmbrDefaites; i++) {
+                    System.out.println("Saisir le classement de votre adversaires pour la défaite " + i +
+                            "\nNon classé : 1" +
+                            "\n40 : 2" +
+                            "\n30/5 : 3" +
+                            "\n30/4 : 4" +
+                            "\n30/3 : 5" +
+                            "\n30/2 : 6" +
+                            "\n30/1 : 7" +
+                            "\n30 : 8" +
+                            "\n15/5 : 9" +
+                            "\n15/4 : 10");
+                    classementAdversaire = In.readInteger();
+                    int differenceClassement = (classementAdversaire - iClassement);
+                    if (classementAdversaire >= 1 && classementAdversaire <= 10) {
+                        switch (differenceClassement) {
+                            case 0:
+                                defaitesEgale++;
+                                System.out.println("Vous avez perdu contre un joueur d'échellon équivalent");
+                                break;
+                            case 1:
+                                defaites1EchInf++;
+                                System.out.println("Vous avez perdu contre un joueur inférieur d'un échellon");
+                                break;
+                            case 2, 3, 4, 5, 6, 7, 8, 9:
+                                defaites2EchInf++;
+                                System.out.println("Vous avez perdu contre un joueur inférieur de plus de 2 échellons");
+                                break;
+                            default:
+                                System.out.println("Cette défaite n'est pas comptabilisé, votre adversaire est à un échellon plus élevé que vous !");
+                                break;
+                        }
+                    }
+                }
+            }
+            // fin If défaites
+
+            // Traitement nombre de victoires supplémentaires
+            formule = victoires - defaitesEgale - (2 * defaites1EchInf) - (5 * defaites2EchInf);
+            diffVictoires = victoires - victoiresMax;
+            if (diffVictoires > 0) {
+                if (formule >= 25 && ((diffVictoires) >= 6)) {
+                    victoires = (victoiresMax + 6);
+                } else if (formule >= 20 && ((diffVictoires) >= 5)) {
+                    victoires = (victoiresMax + 5);
+                } else if (formule >= 15 && ((diffVictoires) >= 4)) {
+                    victoires = (victoiresMax + 4);
+                } else if (formule >= 10 && ((diffVictoires) >= 3)) {
+                    victoires = (victoiresMax + 3);
+                } else if (formule >= 5 && ((diffVictoires) >= 2)) {
+                    victoires = (victoiresMax + 2);
+                } else if (formule >= 0) {
+                    victoires = (victoiresMax + 1);
+                } else {
+                    victoires = victoiresMax;
+                }
+            }
+            System.out.println("Vous avez donc " + victoires + " victoires");
+
+            // Saisie des victoires
+            for (int i = victoires; i > 0; i--) {
+                System.out.println("Saisir le classement de votre adversaires  pour la victoire " + i +
                         "\nNon classé : 1" +
                         "\n40 : 2" +
                         "\n30/5 : 3" +
@@ -112,147 +119,107 @@ public class Ihm {
                         "\n15/5 : 9" +
                         "\n15/4 : 10");
                 classementAdversaire = In.readInteger();
-                if (classementAdversaire <= iClassement){
-                    int differenceClassement = (classementAdversaire - iClassement);
-                    switch (differenceClassement){
-                        case 0:
-                            defaitesEgale++;
-                            break;
-                        case 1:
-                            defaites1EchInf++;
-                        case 2,3,4,5,6,7,8,9:
-                            defaites2EchInf++;
-                    }
+                int differenceClassement = (iClassement - classementAdversaire);
+
+                // If Calcul de points
+                if (differenceClassement <= -2 && differenceClassement >= -9) {
+                    points += 150;
+                    System.out.println("Votre adversaire est 2 echelons plus haut, vous avez gagné 150 points");
+                } else if (differenceClassement == -1) {
+                    points += 100;
+                    System.out.println("Votre adversaire est 1 echelons plus haut, vous avez gagné 100 points");
+                } else if (differenceClassement == 0) {
+                    points += 50;
+                    System.out.println("Votre adversaire est du même echelon, vous avez gagné 50 points");
+                } else if (differenceClassement == 1) {
+                    points += 30;
+                    System.out.println("Votre adversaire est 1 echelons plus bas, vous avez gagné 30 points");
+                } else if (differenceClassement == 2) {
+                    points += 20;
+                    System.out.println("Votre adversaire est 2 echelons plus bas, vous avez gagné 20 points");
+                } else if (differenceClassement == 3) {
+                    points += 15;
+                    System.out.println("Votre adversaire est 3 echelons plus bas, vous avez gagné 15 points");
+                } else if (differenceClassement <= 4) {
+                    System.out.println("Votre adversaire est au moins 4 echelons plus bas, vous avez gagné 0 points");
                 }
             }
-        }
-        // fin If défaites
+            System.out.println("Vos matchs vous ont récompensé de " + points + " points.\nNous allons recalculer votre classement.");
 
-        // Traitement nombre de victoires supplémentaires
-        formule = victoires - defaitesEgale - (2 * defaites1EchInf) - (5 * defaites2EchInf);
-        diffVictoires = victoires - victoiresMax;
-        if (diffVictoires > 0) {
-            if (formule >= 25 && ((diffVictoires) >= 6)) {
-                victoires = (victoiresMax + 6);
-            } else if (formule >= 20 && ((diffVictoires) >= 5)) {
-                victoires = (victoiresMax + 5);
-            } else if (formule >= 15 && ((diffVictoires) >= 4)) {
-                victoires = (victoiresMax + 4);
-            } else if (formule >= 10 && ((diffVictoires) >= 3)) {
-                victoires = (victoiresMax + 3);
-            } else if (formule >= 5 && ((diffVictoires) >= 2)) {
-                victoires = (victoiresMax + 2);
-            } else if (formule >= 0) {
-                victoires = (victoiresMax + 1);
-            } else {
-                victoires = victoiresMax;
-            }
-        }
-        System.out.println("Vous avez donc " + victoires + " victoires");
+            iClassement = calculClassement(iClassement, points);
+            sClassement = sClassement(iClassement);
+            points = iPoints(iClassement);
+            victoiresMax = iVictoiresMax(iClassement);
+            System.out.println("Votre classement nouveau est : " + sClassement + ". Vous avez " + points
+                    + " points, ainsi que " + victoiresMax + " victoires maximum.");
 
-        // Saisie des victoires
-        for (int i = 1; i <= victoires; i++) {
-            System.out.println("Saisir le classement de votre adversaires  pour la victoire " + i +
-                    "\nNon classé : 1" +
-                    "\n40 : 2" +
-                    "\n30/5 : 3" +
-                    "\n30/4 : 4" +
-                    "\n30/3 : 5" +
-                    "\n30/2 : 6" +
-                    "\n30/1 : 7" +
-                    "\n30 : 8" +
-                    "\n15/5 : 9" +
-                    "\n15/4 : 10");
-            classementAdversaire = In.readInteger();
-            int differenceClassement = (iClassement - classementAdversaire);
-
-            // If Calcul de points
-            if (differenceClassement <= -2 && differenceClassement >= -9) {
-                points += 150;
-                System.out.println("Votre adversaire est 2 echelons plus haut, vous avez gagné 150 points");
-            } else if (differenceClassement == -1) {
-                points += 100;
-                System.out.println("Votre adversaire est 1 echelons plus haut, vous avez gagné 100 points");
-            } else if (differenceClassement == 0) {
-                points += 50;
-                System.out.println("Votre adversaire est du même echelon, vous avez gagné 50 points");
-            } else if (differenceClassement == 1) {
-                points += 30;
-                System.out.println("Votre adversaire est 1 echelons plus bas, vous avez gagné 30 points");
-            } else if (differenceClassement == 2) {
-                points += 20;
-                System.out.println("Votre adversaire est 2 echelons plus bas, vous avez gagné 20 points");
-            } else if (differenceClassement == 3) {
-                points += 15;
-                System.out.println("Votre adversaire est 3 echelons plus bas, vous avez gagné 15 points");
-            } else if (differenceClassement <= 4) {
-                System.out.println("Votre adversaire est au moins 4 echelons plus bas, vous avez gagné 0 points");
-            }
-        }
-        System.out.println("Vos matchs vous ont récompensé de " + points + " points.\nNous allons recalculer votre classement.");
+            victoires--;
+        } while (victoires > 0);
+    }
+    public static int calculClassement(int iClassement, int points) {
         switch (iClassement) {
-            case 1:
+            case NC:
                 if (points >= 50) {
                     iClassement++;
                 }
                 break;
-            case 2:
+            case C40:
                 if (points >= 80) {
                     iClassement++;
                 } else if (points < 30) {
                     iClassement--;
                 }
                 break;
-            case 3:
+            case C30_5:
                 if (points >= 150) {
                     iClassement++;
                 } else if (points < 50) {
                     iClassement--;
                 }
                 break;
-            case 4:
+            case C30_4:
                 if (points >= 260) {
                     iClassement++;
                 } else if (points < 90) {
                     iClassement--;
                 }
                 break;
-            case 5:
+            case C30_3:
                 if (points >= 340) {
                     iClassement++;
                 } else if (points < 145) {
                     iClassement--;
                 }
                 break;
-            case 6:
+            case C30_2:
                 if (points >= 410) {
                     iClassement++;
                 } else if (points < 205) {
                     iClassement--;
                 }
                 break;
-            case 7:
+            case C30_1:
                 if (points >= 480) {
                     iClassement++;
                 } else if (points < 245) {
                     iClassement--;
                 }
                 break;
-            case 8:
+            case C30:
                 if (points >= 510) {
                     iClassement++;
                 } else if (points < 290) {
                     iClassement--;
                 }
                 break;
-            case 9:
+            case C15_4:
                 if (points >= 580) {
                     iClassement++;
                 } else if (points < 325) {
                     iClassement--;
                 }
                 break;
-            case 10:
+            case C15_5:
                 if (points >= 660) {
                     iClassement++;
                 } else if (points < 395) {
@@ -260,58 +227,97 @@ public class Ihm {
                 }
                 break;
         }
+        return iClassement;
+    }
+
+    public static String sClassement(int iClassement) {
+        String sClassement = "";
         switch (iClassement) {
-            case NC:
+            case 1:
                 sClassement = "Non Classé";
-                points = 0;
-                victoiresMax = 5;
                 break;
-            case c40:
+            case 2:
                 sClassement = "40";
-                points = 2;
-                victoiresMax = 5;
                 break;
-            case c30_5:
+            case 3:
                 sClassement = "30/5";
-                points = 5;
                 break;
-            case c30_4:
+            case 4:
                 sClassement = "30/4";
-                points = 10;
-                victoiresMax = 5;
                 break;
-            case c30_3:
+            case 5:
                 sClassement = "30/3";
-                points = 20;
-                victoiresMax = 6;
                 break;
-            case c30_2:
+            case 6:
                 sClassement = "30/2";
-                points = 30;
-                victoiresMax = 6;
                 break;
-            case c30_1:
+            case 7:
                 sClassement = "30/1";
-                points = 50;
-                victoiresMax = 6;
                 break;
-            case c30:
+            case 8:
                 sClassement = "30";
-                points = 80;
-                victoiresMax = 6;
                 break;
-            case c15_5:
+            case 9:
                 sClassement = "15/5";
-                points = 120;
-                victoiresMax = 6;
                 break;
-            case c15_4:
+            case 10:
                 sClassement = "15/4";
-                points = 160;
-                victoiresMax = 6;
+                break;
+            default:
+                sClassement = "Non Classé";
+                System.out.println("Mauvaise valeur entree, vous serez donc : " + sClassement);
                 break;
         }
-        System.out.println("Votre classement nouveau est : " + sClassement + ". Vous avez " + points
-                + " points, ainsi que " + victoiresMax + " victoires maximum.");
+        return sClassement;
+    }
+
+    public static int iPoints(int classementDepart) {
+        int iPoints = 0;
+        switch (classementDepart) {
+            // Pas de case 1 ni de default, car valeur initialisée à 0
+            case 2:
+                iPoints = 2;
+                break;
+            case 3:
+                iPoints = 5;
+                break;
+            case 4:
+                iPoints = 10;
+                break;
+            case 5:
+                iPoints = 20;
+                break;
+            case 6:
+                iPoints = 30;
+                break;
+            case 7:
+                iPoints = 50;
+                break;
+            case 8:
+                iPoints = 80;
+                break;
+            case 9:
+                iPoints = 120;
+                break;
+            case 10:
+                iPoints = 160;
+                break;
+            default:
+                break;
+        }
+        return iPoints;
+    }
+
+    public static int iVictoiresMax(int iClassement) {
+        int iVictoiresMax = 0;
+        switch (iClassement) {
+            case 1, 2, 3, 4:
+                iVictoiresMax = 5;
+                break;
+            case 5, 6, 7, 8, 9, 10:
+                iVictoiresMax = 6;
+                break;
+        }
+        return iVictoiresMax;
     }
 }
